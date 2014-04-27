@@ -1,0 +1,9 @@
+Flask
+itsdangerous
+Jinja2
+MarkupSafe
+pip
+requests
+setuptools
+Werkzeug
+wsgiref
