@@ -11,8 +11,8 @@ def index():
 @app.route('/api/sensors/<int:id>', methods=['GET'])
 def getSensor(id=1):
   sensor = Sensor.query.get(id)
-  print [{"val": m.val, "update_on": m.update_on.isoformat()} for m in sensor.measures]
-  return json.dumps({"sensor": id})
+  measures = [{"val": m.val, "update_on": m.update_on.isoformat()} for m in sensor.measures]
+  return json.dumps({"sensor": id, "measures": measures })
   
 @app.route('/api/sensors/<int:id>', methods=['POST'])
 def postSensor(id):
