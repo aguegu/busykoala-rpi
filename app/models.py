@@ -11,5 +11,6 @@ class Sensor(db.Model):
 class Measure(db.Model):
   id = db.Column(db.Integer, primary_key = True)
   val = db.Column(db.Integer, nullable = False)
+  update_on = db.Column(db.DateTime)
   sensor_id = db.Column(db.Integer, db.ForeignKey('sensor.id'))
 
