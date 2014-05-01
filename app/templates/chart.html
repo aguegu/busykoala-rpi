@@ -1,0 +1,67 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<script src="{{ url_for('static', filename='canvasjs.min.js') }}"></script>
+	<script src="{{ url_for('static', filename='jquery.min.js') }}"></script>
+</head>
+<body>
+	<div id="chartMain" style="height: 400px; width: 800px;"></div>
+	<script type="text/javascript">
+		$(function () {
+			myAjax = function(uri, method, data) {
+				var request = {
+						url: uri,
+						type: method,
+						contentType: "application/json",
+						accepts: "application/json",
+						cache: false,
+						dataType: 'json',
+						data: JSON.stringify(data),
+						error: function(jqXHR) {
+								console.log("ajax error " + jqXHR.status);
+						}
+				};
+				return $.ajax(request);
+			}
+
+			myAjax("/api/sensors/1", 'GET').done(function(data) {
+				console.log(data.measures);
+				
+				var chart = new CanvasJS.Chart("chartMain", {
+				theme: "theme1",				 
+				zoomEnabled: true,
+				 
+				title:{
+					text: "Temperature"
+				},
+				 
+				data: [
+					{
+						type: "line",
+						name: "temperature",
+						showInLegend: true,
+						xValueType: "dateTime",
+						dataPoints: data.measures,
+					},
+				],
+				 
+				axisX:{
+					title: "time",
+					gridThickness: 1,
+					interval:2,
+					intervalType: "hour"
+				},
+				 
+				axisY:{
+					minimum: 20,
+				},
+			});
+			 
+			chart.render();
+			});
+			 
+		
+		});
+	</script>
+</body>
+</html>

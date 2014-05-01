@@ -1,7 +1,8 @@
 from app import app, db
-from flask import json, request, abort
+from flask import json, request, abort, render_template
 from models import Sensor, Measure
 from datetime import datetime
+import time
 
 @app.route('/', methods=['GET'])
 def index():
@@ -11,7 +12,7 @@ def index():
 @app.route('/api/sensors/<int:id>', methods=['GET'])
 def getSensor(id=1):
   sensor = Sensor.query.get(id)
-  measures = [{"val": m.val, "update_on": m.update_on.isoformat()} for m in sensor.measures.order_by("update_on desc").limit(10)]
+  measures = [{"y": m.val / 16.0, "x": int(time.mktime(m.update_on.timetuple()) * 1000)} for m in sensor.measures.order_by("update_on desc").limit(10)]
 
   return json.dumps({"sensor": id, "measures": measures })
   
@@ -30,3 +31,6 @@ def postSensor(id):
 
   return json.dumps({"result": "OK"})
 
+@app.route('/chart')
+def showChart():
+  return render_template('chart.html')
